@@ -22,7 +22,7 @@ export class Vehicle extends Entity {
     this.trackMin = (GRID.colMin - 1) * TILE;
     this.trackMax = (GRID.colMax + 1) * TILE;
     this.col = Math.round(x / TILE);
-    mesh.position.set(x, 0, -row * TILE);
+    mesh.position.set(x, TILE / 2, -row * TILE);
   }
 
   update(dt: number): void {

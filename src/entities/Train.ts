@@ -48,7 +48,7 @@ export class Train extends Entity {
   private placeMeshes(): void {
     for (let i = 0; i < this.meshes.length; i++) {
       const segX = this.x - i * TILE * 0.92 * this.dir;
-      this.meshes[i].position.set(segX, 0, -this.row * TILE);
+      this.meshes[i].position.set(segX, TILE / 2, -this.row * TILE);
     }
   }
 

@@ -15,7 +15,7 @@ export class Coin extends Entity {
     this.row = row;
     this.col = col;
     this.mesh = mesh;
-    mesh.position.set(col * TILE, 0.35, -row * TILE);
+    mesh.position.set(col * TILE, TILE / 2, -row * TILE);
   }
 
   // Whether this coin is at the given cell.
