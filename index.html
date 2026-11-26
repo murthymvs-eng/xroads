@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>XRoads</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        overflow: hidden;
+        background: #0b0f14;
+      }
+      #game {
+        position: fixed;
+        inset: 0;
+      }
+      #hud {
+        position: fixed;
+        top: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        font: 700 22px system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+        color: #fff;
+        background: rgba(0, 0, 0, 0.4);
+        padding: 6px 14px;
+        border-radius: 8px;
+        pointer-events: none;
+        user-select: none;
+        z-index: 10;
+        letter-spacing: 1px;
+      }
+      #money {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        font: 700 20px system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+        color: #ffd700;
+        text-shadow: 0 0 8px rgba(0, 0, 0, 0.6);
+        background: rgba(0, 0, 0, 0.4);
+        padding: 4px 12px;
+        border-radius: 8px;
+        pointer-events: none;
+        user-select: none;
+        z-index: 10;
+        letter-spacing: 1px;
+      }
+      #character-select {
+        position: fixed;
+        inset: 0;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        background: rgba(15, 25, 20, 0.7);
+        z-index: 30;
+      }
+      #character-select .panel {
+        background: #1f2a22;
+        color: #fff;
+        padding: 28px 40px;
+        border-radius: 16px;
+        text-align: center;
+        font: 700 20px system-ui, sans-serif;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
+        border: 2px solid rgba(255, 255, 255, 0.15);
+        min-width: 320px;
+      }
+      #character-select h1 {
+        margin: 0 0 16px;
+        font-size: 26px;
+        letter-spacing: 1px;
+      }
+      #character-select .money {
+        margin: 0 0 16px;
+        font-size: 18px;
+        color: #ffd700;
+      }
+      #character-select .roster {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-bottom: 16px;
+      }
+      #character-select .char-card {
+        width: 96px;
+        padding: 12px;
+        border-radius: 10px;
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.03);
+        cursor: pointer;
+        text-align: center;
+      }
+      #character-select .char-card.selected {
+        border-color: #ffd700;
+        background: rgba(255, 215, 0, 0.15);
+      }
+      #character-select .char-card.locked {
+        opacity: 0.5;
+        filter: grayscale(1);
+      }
+      #character-select .char-card:hover:not(.locked) {
+        border-color: #ffd700;
+      }
+      #character-select .char-img {
+        width: 64px;
+        height: 64px;
+        margin: 0 auto 8px;
+        object-fit: contain;
+      }
+      #character-select .char-name {
+        font-size: 14px;
+        margin-bottom: 4px;
+      }
+      #character-select .char-cost {
+        font-size: 12px;
+        color: #ffd700;
+      }
+      #character-select .char-cost.locked::before {
+        content: '🔒 ';
+      }
+      #character-select button#play {
+        margin-top: 12px;
+        padding: 10px 22px;
+        font: 700 18px system-ui, sans-serif;
+        border: 0;
+        border-radius: 8px;
+        background: #58c453;
+        color: #fff;
+        cursor: pointer;
+      }
+      #character-select button#play:hover {
+        background: #6ad165;
+      }
+      #character-select button#play:disabled {
+        background: #555;
+        cursor: not-allowed;
+      }
+      #restart {
+        margin-top: 16px;
+        padding: 10px 22px;
+        font: 700 18px system-ui, sans-serif;
+        border: 0;
+        border-radius: 8px;
+        background: #58c453;
+        color: #fff;
+        cursor: pointer;
+        display: none;
+      }
+      #restart:hover {
+        background: #6ad165;
+      }
+      #loading {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font: 600 20px system-ui, sans-serif;
+        background: #0b0f14;
+        z-index: 20;
+      }
+      #gameover {
+        position: fixed;
+        inset: 0;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        background: rgba(15, 25, 20, 0.55);
+        z-index: 5;
+      }
+      #gameover .panel {
+        background: #1f2a22;
+        color: #fff;
+        padding: 28px 40px;
+        border-radius: 16px;
+        text-align: center;
+        font: 700 20px system-ui, sans-serif;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
+        border: 2px solid rgba(255, 255, 255, 0.15);
+      }
+      #gameover h1 {
+        margin: 0 0 10px;
+        font-size: 30px;
+        letter-spacing: 1px;
+      }
+      #gameover .sub {
+        font-size: 18px;
+        opacity: 0.95;
+        margin: 4px 0;
+      }
+      #restart {
+        margin-top: 16px;
+        padding: 10px 22px;
+        font: 700 18px system-ui, sans-serif;
+        border: 0;
+        border-radius: 8px;
+        background: #58c453;
+        color: #fff;
+        cursor: pointer;
+        display: none;
+      }
+      #restart:hover {
+        background: #6ad165;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="game"></div>
+    <div id="hud">DISTANCE 0</div>
+    <div id="money">💰 0</div>
+    <div id="loading">Loading…</div>
+    <div id="gameover">
+      <div class="panel">
+        <h1>GAME OVER</h1>
+        <div class="sub" id="go-score">Distance: 0</div>
+        <div class="sub" id="go-best">Best: 0</div>
+        <button id="restart">Play Again</button>
+      </div>
+    </div>
+    <div id="character-select">
+      <div class="panel">
+        <h1>CHARACTER SELECT</h1>
+        <div class="money" id="cs-money">💰 0</div>
+        <div class="roster" id="cs-roster"></div>
+        <button id="cs-play">PLAY</button>
+      </div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
