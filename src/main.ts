@@ -3,6 +3,8 @@ import { AssetLoader } from './core/AssetLoader';
 import { Hud } from './ui/Hud';
 import { CHARACTERS, DEFAULT_CHARACTER } from './data/characters';
 
+const BASE = import.meta.env.BASE_URL
+
 async function boot() {
   const hud = new Hud();
   hud.showLoading('Loading…');
@@ -13,7 +15,7 @@ async function boot() {
   const loader = new AssetLoader();
   const textures = await loader.load([
     ...CHARACTERS.map((c) => ({ id: c.id, url: c.texture })),
-    { id: 'sky', url: '/sprites/tiled-bg.png' },
+    { id: 'sky', url: BASE + '/sprites/tiled-bg.png' },
   ]);
   hud.hideLoading();
 
