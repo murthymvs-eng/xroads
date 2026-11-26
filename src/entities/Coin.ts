@@ -7,10 +7,10 @@ import { MeshFactory } from '../render/MeshFactory';
 // A single collectible coin sitting on a lane cell. Static (doesn't move).
 // Collected when the player's col matches the coin's col on the same row.
 export class Coin extends Entity {
-  readonly mesh: THREE.Mesh;
+  readonly mesh: THREE.Object3D;
   collected = false;
 
-  constructor(row: number, col: number, mesh: THREE.Mesh) {
+  constructor(row: number, col: number, mesh: THREE.Object3D) {
     super();
     this.row = row;
     this.col = col;
@@ -31,7 +31,7 @@ export class Coin extends Entity {
 }
 
 // Build a coin mesh (golden cylinder).
-export function makeCoinMesh(factory: MeshFactory): THREE.Mesh {
+export function makeCoinMesh(factory: MeshFactory): THREE.Object3D {
   return factory.makeCoin();
 }
 
